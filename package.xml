@@ -1,0 +1,21 @@
+<package format="2">
+  <name>Engagement_Queue_Tracking</name>
+  <version>0.0.1</version>
+  <description>
+    This package provides foo capability.
+  </description>
+  <maintainer email="ivana@willowgarage.com">Ivana Bildbotz</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/foo_core</url>
+  <author>Ivana Bildbotz</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>rospy</exec_depend>
+</package>
