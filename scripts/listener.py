@@ -9,9 +9,8 @@ from sensor_msgs.msg import Image as Img
 from PIL import Image
 
 
-def callback(data):
+def visualCallback(data):
     # Converting from Azure image to OpenCV image
-    print("HIT3")
     bridge = CvBridge()
     img = bridge.imgmsg_to_cv2(data)
 
@@ -28,21 +27,15 @@ def callback(data):
     # Draw rectangules over images
     for (nx, ny, x, y) in face_rects:
         cv.rectangle(img, (nx, ny), (nx + x, ny + y), (0, 0, 255), 2)
-    print("HIT4")
     cv.imshow("Camera Output", img)
     cv.waitKey(1)
 
 
 def listener():
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
-    print("Hit1")
+
     rospy.init_node('listener', anonymous=True)
-    print("Hit2")
-    rospy.Subscriber("/rgb/image_raw", Img, callback)
+    rospy.Subscriber("/rgb/image_raw", Img, visualCallback)
+
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
