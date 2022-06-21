@@ -1,14 +1,14 @@
 <package format="2">
-  <name>Engagement_Queue_Tracking</name>
+  <name>engagement_queue_tracking</name>
   <version>0.0.1</version>
   <description>
-    This package provides foo capability.
+    This algorithm is to approximate the engagement level in participants during
+    Child-Robot Interaction (CRI) through use of visual and physiological cue tracking.
   </description>
-  <maintainer email="ivana@willowgarage.com">Ivana Bildbotz</maintainer>
-  <license>BSD</license>
+  <maintainer email="zkaufman@protonmail.com">Zachary Kaufman</maintainer>
+  <license>TODO</license>
 
-  <url>http://ros.org/wiki/foo_core</url>
-  <author>Ivana Bildbotz</author>
+  <author>Zachary Kaufman</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
