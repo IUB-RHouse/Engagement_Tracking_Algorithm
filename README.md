@@ -1,4 +1,4 @@
-# Engagement Queue Tracking Algorithm
+# EngagementTracking Algorithm
 ## Setup instructions
 ### Unfinished
 NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently support Ubuntu 20.04 or newer, and neither does it's ROS driver)
