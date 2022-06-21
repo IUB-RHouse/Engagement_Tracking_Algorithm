@@ -9,9 +9,12 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 5. Clone this repo into catkin_ws/src/ and run "catkin_make" in catkin_ws/ 
 
 ## Recording Instructions
-1. In the root of this folder, open a terminal and run "python scripts/listener.py \[Seconds\]" and replace \[Seconds\] with the number of seconds you want the program to run.
-2. Do not ctrl+C the program, this will corrupt the output video file.
-3. The output video will by in the output folder after the recording is finished.
+1. In the root of this folder, open a terminal and run "python scripts/listener.py \[Mode\] \[Seconds\]" and replace \[Seconds\] with the number of seconds you want the program to run.
+- Possible modes:
+    - "-r" for recording
+    - "-a" for analysis (currently only displays the camera feed to the screen)
+2. Do not ctrl+C the program in recorder mode, this will corrupt the output video file.
+3. The output video will be in the output folder after the recording is finished.
 4. 15fps is what is coded into this script, however, the Azure ROS Driver default is 5. You must change the default in the Azure Kinect ROS Driver driver.launch file to 15. Other options are 5, and 30, make sure the number in this file matches the one in the driver.launch. 
 
 ### Known bugs
