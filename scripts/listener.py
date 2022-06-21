@@ -42,24 +42,36 @@ def visualCallback(data):
 def visualRecorder(data):
     global frame
     # Converting from Azure image to OpenCV image
-    if(vid.isOpened() and frame < (int(sys.argv[1]) * int(frameRate))):
+    if(vid.isOpened() and frame < (int(sys.argv[2]) * int(frameRate))):
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(data)
+        img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
         vid.write(img)
         frame += 1
     else:
         print("Video recorder turned off. Outputting file.")
         vid.release()
+        sys.exit()
 
 
 def listener():
     inter = 0
     rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
+    if(sys.argv[1] == "-r"):
+        rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
+    elif(sys.argv[1] == "-a"):
+        rospy.Subscriber("/rgb/image_raw", Img, visualCallback)
+    else:
+        print("Error: Argument \'" + sys.argv[1] + "\' not recognized.")
+        sys.exit()
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
 
 if __name__ == '__main__':
-    listener()
+    if(len(sys.argv) != 3):
+        print("Error - Two arguments required: [mode] [duration]")
+        sys.exit()
+    else:
+        listener()

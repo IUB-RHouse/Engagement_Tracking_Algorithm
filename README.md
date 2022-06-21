@@ -15,7 +15,7 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 4. 15fps is what is coded into this script, however, the Azure ROS Driver default is 5. You must change the default in the Azure Kinect ROS Driver driver.launch file to 15. Other options are 5, and 30, make sure the number in this file matches the one in the driver.launch. 
 
 ### Known bugs
-1. RGB values are reversed
+1. RGB values are reversed (FIXED)
 2. Output is .avi instead of .mp4
 3. Requires a duration instead of being quit with the keyboard
-4. Program is currently set for recording only, no analysis, no facial detection, no live output
+4. Program is currently set for recording only, no analysis, no facial detection, no live output (FIXED)
