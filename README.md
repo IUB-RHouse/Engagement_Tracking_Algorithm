@@ -6,7 +6,12 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 2. Install the [Azure Kinect SDK](https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download) onto your Linux system. Make sure to follow ALL instructions, there are multiple webpages with instructions required for it to work on Linux.
 3. Install the [Azure Kinect ROS Driver](https://github.com/microsoft/Azure_Kinect_ROS_Driver) using the Building Guide (near the bottom of the README). Clone that repo in catkin_ws/src/ and then run "catkin_make" in catkin_ws/ For usage information and a list of topics go to [this link](https://github.com/microsoft/Azure_Kinect_ROS_Driver/blob/melodic/docs/usage.md)
 4. INSERT INFO FOR BOSON
-5. Clone this repo into catkin_ws/src/ and run "catkin_make" in catkin_ws/ 
+5. Clone this repo into catkin_ws/src/ and run "catkin_make" in catkin_ws/
+6. Open three terminals (or three tabs in a terminals)
+    1. In the first one run "roscore"
+    2. In the second one go to catkin_ws/src/azure_kinect_ros_driver/launch and run "roslaunch driver.launch"
+    3. In the third one go to catkin_ws/src/engagement_queue_tracking and run "python scripts/listener.py \[MODE\] \[DURATION\]"
+        - Do not repeat this step in the Recording Instructions
 
 ## Recording Instructions
 1. In the root of this folder, open a terminal and run "python scripts/listener.py \[Mode\] \[Seconds\]" and replace \[Seconds\] with the number of seconds you want the program to run.
