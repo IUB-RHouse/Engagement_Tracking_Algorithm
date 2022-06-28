@@ -22,7 +22,7 @@ def endProgram():
     print("Shutdown initiated. Ending program. Please press \'ctrl+C\'")
     vid.release()
 
-def visualCallback(data):
+def visualAnalysis(data):
     # Converting from Azure image to OpenCV image
     bridge = CvBridge()
     img = bridge.imgmsg_to_cv2(data)
@@ -30,16 +30,9 @@ def visualCallback(data):
     # Image Processing
     img_grey = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    # Loading Haar Cascade classifier for frontal face
-    #haar_frontal_face = cv.CascadeClassifier(cv.data.haarcascades + 'include/haarcascade_frontalface_default.xml')
-    # Setting face square parameters
-    #face_rects = haar_frontal_face.detectMultiScale(img_grey, scaleFactor=1.2, minNeighbors=5, minSize=(30, 30), flags=cv.CASCADE_SCALE_IMAGE)
-    # Print number of faces found
-    #print("Detected faces: ", len(face_rects))
+    # Call to appropriate files for analysis
 
-    # Draw rectangules over images
-    #for (nx, ny, x, y) in face_rects:
-    #    cv.rectangle(img, (nx, ny), (nx + x, ny + y), (0, 0, 255), 2)
+
     cv.imshow("Camera Output", img)
     cv.waitKey(1)
 
@@ -58,13 +51,13 @@ def visualRecorder(data):
 
 
 def listener():
-    inter = 0
     rospy.init_node('listener', anonymous=True)
     rospy.on_shutdown(endProgram)
+
     if(sys.argv[1] == "-r"):
         rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
     elif(sys.argv[1] == "-a"):
-        rospy.Subscriber("/rgb/image_raw", Img, visualCallback)
+        rospy.Subscriber("/rgb/image_raw", Img, visualAnalysis)
     else:
         print("Error: Argument \'" + sys.argv[1] + "\' not recognized.")
         sys.exit()
@@ -74,8 +67,8 @@ def listener():
 
 
 if __name__ == '__main__':
-    if(len(sys.argv) != 3):
-        print("Error - Two arguments required: [mode] [duration]")
+    if(len(sys.argv) > 1):
+        print("Error - Mode argument required")
         sys.exit()
     else:
         listener()

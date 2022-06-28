@@ -10,7 +10,7 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 6. Open three terminals (or three tabs in a terminals)
     1. In the first one run "roscore"
     2. In the second one go to catkin_ws/src/azure_kinect_ros_driver/launch and run "roslaunch driver.launch"
-    3. In the third one go to catkin_ws/src/engagement_queue_tracking and run "python scripts/listener.py \[MODE\] \[DURATION\]"
+    3. In the third one go to catkin_ws/src/engagement_queue_tracking and run "python scripts/listener.py \[MODE\] \[DURATION (optional)\]"
         - Do not repeat this step in the Recording Instructions
 
 ## Recording Instructions
