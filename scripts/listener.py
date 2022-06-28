@@ -31,7 +31,7 @@ def visualAnalysis(data):
     img_grey = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     # Call to appropriate files for analysis
-
+    # Shekinah will implement facial detection here
 
     cv.imshow("Camera Output", img)
     cv.waitKey(1)
