@@ -24,4 +24,3 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 
 ### Known bugs
 1. Output is .avi instead of .mp4
-2. Requires a duration instead of being quit with the keyboard

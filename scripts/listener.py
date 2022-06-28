@@ -18,6 +18,10 @@ fileName = "output/" + now.strftime("%d_%m_%Y-%H_%M_%S")
 fourcc = cv.VideoWriter_fourcc(*'MJPG')
 vid = cv.VideoWriter(fileName + ".avi", fourcc, frameRate, size, True)
 
+def endProgram():
+    print("Shutdown initiated. Ending program. Please press \'ctrl+C\'")
+    vid.release()
+
 def visualCallback(data):
     # Converting from Azure image to OpenCV image
     bridge = CvBridge()
@@ -49,14 +53,14 @@ def visualRecorder(data):
         vid.write(img)
         frame += 1
     else:
-        print("Video recorder turned off. Outputting file.")
+        print("Set duration reached. Ending program. Please press \'ctrl+C\'")
         vid.release()
-        sys.exit()
 
 
 def listener():
     inter = 0
     rospy.init_node('listener', anonymous=True)
+    rospy.on_shutdown(endProgram)
     if(sys.argv[1] == "-r"):
         rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
     elif(sys.argv[1] == "-a"):
