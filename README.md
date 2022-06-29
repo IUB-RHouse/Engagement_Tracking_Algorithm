@@ -6,9 +6,9 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 2. Install the [Azure Kinect SDK](https://docs.microsoft.com/en-us/azure/kinect-dk/sensor-sdk-download) onto your Linux system. Make sure to follow ALL instructions, there are multiple webpages with instructions required for it to work on Linux.
 3. Install the [Azure Kinect ROS Driver](https://github.com/microsoft/Azure_Kinect_ROS_Driver) using the Building Guide (near the bottom of the README). Clone that repo in `catkin_ws/src/` and then run *catkin_make* in `catkin_ws/` For usage information and a list of topics go to [this link](https://github.com/microsoft/Azure_Kinect_ROS_Driver/blob/melodic/docs/usage.md)
 4. The Azure Kinect ROS Driver is set to run at 5 FPS. Other options include 15 and 30 FPS. The Engagement Tracking Algorithm defaults at 15 FPS, so we must change the Azure Kinect ROS Driver to match. To do this, go into `catkin_ws/src/Azure_Kinect_ROS_Driver/launch/`
-5. Then, using your favorite text editor (such as Vim or Nano) edit the `driver.launch` file. You will need to change the arg named "fps" which is currently set to 5. Set it to 15 (or whatever you are planning to use) and then save and exit the file.
+5. Then, using your favorite text editor (such as Vim or Nano) edit the `driver.launch` file. You will need to change the arg named "fps" which is currently set to 5. Set it to 15 (or whatever you are planning to use) and then save and exit the file
 6. Inside the `catkin_ws/` folder (not one of it's subfolders) run *source devel/setup.bash*
-    - **NOTE**: You will need to do this every time you reboot the computer.
+    - **NOTE**: You will need to do this every time you reboot the computer
 
 ## Setup instructions (Engagement Algorithm)
 1. Clone this repo by clicking the colored "Code" button on this page and copying the link. Go into catkin_ws/src/ and type in *git clone \[link\]*
@@ -18,7 +18,7 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
     1. In the first one run the *roscore* command
     2. In the second one go to `catkin_ws/src/Azure_Kinect_ROS_Driver/launch/` and run *roslaunch driver.launch*
         - If you get an error saying `Resource not found: azure_kinect_ros_driver`, run step 6 of the Azure Kinect Setup Instructions
-    3. In the third one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program.
+    3. In the third one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program
 
 ## Recording Instructions
 1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm)`, open a terminal and run *python scripts/listener.py -r \[Duration (in seconds, optional)\]*
