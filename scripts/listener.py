@@ -11,6 +11,7 @@ from PIL import Image
 from datetime import datetime
 
 frame = 0
+duration = False
 size = (2048, 1536) # This is from the Azure Kinect /rgb/image_raw topic
 frameRate = 15.0 # This is NOT the default FPS for the Azure Kinect. Azure Kinect defaults on 5, change this in driver.launch in the drivers folder of the Azure Kinect ROS Driver
 now = datetime.now()
@@ -19,7 +20,7 @@ fourcc = cv.VideoWriter_fourcc(*'MJPG')
 vid = cv.VideoWriter(fileName + ".avi", fourcc, frameRate, size, True)
 
 def endProgram():
-    print("Shutdown initiated. Ending program. Please press \'ctrl+C\'")
+    print("Shutdown initiated. Ending program.")
     vid.release()
 
 def visualAnalysis(data):
@@ -38,19 +39,25 @@ def visualAnalysis(data):
 
 def visualRecorder(data):
     global frame
+    global duration
     # Converting from Azure image to OpenCV image
-    if(vid.isOpened() and frame < (int(sys.argv[2]) * int(frameRate))):
-        bridge = CvBridge()
-        img = bridge.imgmsg_to_cv2(data)
-        img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
-        vid.write(img)
-        frame += 1
+    if(vid.isOpened()):
+        if(not duration or frame < (int(sys.argv[2]) * int(frameRate))):
+            bridge = CvBridge()
+            img = bridge.imgmsg_to_cv2(data)
+            img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
+            vid.write(img)
+            frame += 1
+        else:
+            print("Set duration reached.")
+            vid.release()
     else:
-        print("Set duration reached. Ending program. Please press \'ctrl+C\'")
-        vid.release()
+        rospy.signal_shutdown("OpenCV VideoWriter is no longer open. Program ending.")
 
 
-def listener():
+def listener(setDuration):
+    global duration 
+    duration = setDuration
     rospy.init_node('listener', anonymous=True)
     rospy.on_shutdown(endProgram)
 
@@ -67,8 +74,13 @@ def listener():
 
 
 if __name__ == '__main__':
-    if(len(sys.argv) > 1):
-        print("Error - Mode argument required")
+    if(len(sys.argv) < 2):
+        print("Error: Mode argument required")
         sys.exit()
+    elif(sys.argv[1][0] != '-'):
+        print("Error: Argument \'" + sys.argv[1] + "\' is not recognized. Please enter valid mode.")
     else:
-        listener()
+        if(len(sys.argv) > 2):
+            listener(True)
+        else:
+            listener(False)
