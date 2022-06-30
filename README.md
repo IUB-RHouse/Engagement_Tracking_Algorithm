@@ -16,7 +16,7 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
 3. After that, run *source devel/setup.bash*
 4. Everytime you plan to run this program, open three terminals (or three tabs in a terminal)
     1. In the first one run the *roscore* command
-    2. In the second one go to `catkin_ws/src/Azure_Kinect_ROS_Driver/launch/` and run *roslaunch driver.launch*
+    2. In the second one go to `catkin_ws/src/azure_kinect_ros_driver/launch/` and run *roslaunch driver.launch*
         - If you get an error saying `Resource not found: azure_kinect_ros_driver`, run step 6 of the Azure Kinect Setup Instructions
     3. In the third one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program
 
