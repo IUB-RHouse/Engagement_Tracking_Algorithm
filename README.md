@@ -45,3 +45,13 @@ NOTE: There is currently no method of analysis AND recording at the same time.
 2. 15fps is what is coded into this script, however, the Azure ROS Driver default is 5. You must change the default in the Azure Kinect ROS Driver driver.launch file to 15. Other options are 5, and 30. Make sure the number in this file matches the one in the driver.launch
     - If you followed the setup instructions for the Azure Kinect then these should already match, however, if you wish to change to 5 or 30 FPS make sure to change both this script and the Azure Kinect ROS Driver
     - If you are unsure whether or not the Azure Kinect and this program have matching FPS', run a sample recording and see if it seems too fast or too slow. If it is too fast/slow then follow the Azure Kinect Setup Instructions in this README starting on instruction 4
+
+## Troubleshooting
+- If you get an error saying `Resource not found: azure_kinect_ros_driver`, run step 6 of the Azure Kinect Setup Instructions
+- There are three common errors that can come up when you try to watch the recordings in the Output folder
+    1. Demux
+        - This error means that the resolution specified in the listener.py script is not the real resolution of the camera. If the camera was switched or we began listening to a new ROS topic that could be the cause of this. Print out the shape of the images using OpenCV to get the new resolution
+    2. Stream
+        - This error means that the program was quit incorrectly. If ROS was quit unexpectedly or the camera/computer lost power then the video would not have been coded correctly to save. 
+    3. No media
+        - This error means that nothing was recorded. It could be a bug in the code but it most likely means that the ROS topic we are trying to subscribe to isn't being published, and so the video never has any data. 
