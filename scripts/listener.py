@@ -39,28 +39,36 @@ def argHandler():
     global vSize
 
     for arg in sys.argv:
+        print(arg)
         if(arg[0] == '-'):
-            if(arg[1:2] == "ra"):
+            print("Hit")
+            if(arg[1:3] == "ra"):
                 recVis = True
                 recTherm = True
-            if(arg[1:2] == "rv")
+                print("Hit1")
+            if(arg[1:3] == "rv"):
                 recVis = True
-            if(arg[1:2] == "rt"):
+                print("Hit2")
+            if(arg[1:3] == "rt"):
                 recTherm = True
+                print("Hit3")
             if(arg[1] == "a"):
                 analyze = True
+                print("Hit4")
         else:
-            if(arg[0:4] == "fps="):
+            if(arg[0:5] == "fps="):
                 vFrameRate = arg[6:7]
                 vVid = cv.VideoWriter(vFilename + ".avi", fourCC, vFrameRate, vSize, True)
 
-
-
-
-
 def endProgram():
+    global recVis
+    global recTherm
+
     print("Shutdown initiated. Ending program.")
-    vid.release()
+    if(recVis):
+        vVid.release()
+    elif(recTherm):
+        tVid.release()
 
 def visualAnalysis(data):
     # Converting from Azure image to OpenCV image
@@ -77,24 +85,9 @@ def visualAnalysis(data):
     cv.waitKey(1)
 
 def visualRecorder(data):
-    global aFrame
-    # Converting from Azure image to OpenCV image and records it
-    if(vid.isOpened()):
-        if(not aDuration or aFrame < (int(sys.argv[2]) * int(vFrameRate))):
-            bridge = CvBridge()
-            img = bridge.imgmsg_to_cv2(data)
-            img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
-            vid.write(img)
-            vFrame += 1
-        else:
-            print("Set aDuration reached.")
-            vid.release()
-    else:
-        rospy.signal_shutdown("OpenCV VideoWriter is no longer open. Program ending.")
-
-def visualRecorder(data):
     # Converting from Boson thermal image to OpenCV image and records it
-    if(vid.isOpened()):
+    print(vVid.isOpened())
+    if(vVid.isOpened()):
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(data)
         img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
@@ -104,7 +97,7 @@ def visualRecorder(data):
 
 def thermalRecorder(data):
     # Converting from Boson thermal image to OpenCV image and records it
-    if(vid.isOpened()):
+    if(tVid.isOpened()):
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(data)
         img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
@@ -120,7 +113,8 @@ def listener():
 
     rospy.init_node('listener', anonymous=True)
     rospy.on_shutdown(endProgram)
-
+    
+    print("Listen: ", recVis)
     if(recVis):
         rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
     if(recTherm):
@@ -128,7 +122,7 @@ def listener():
     if(analyze):
         rospy.Subscriber("/rgb/image_raw", Img, visualAnalysis)
         rospy.Subscriber("/flir_boson/image_raw", Img, visualAnalysis)
-    else:
+    if(not recVis and not recTherm and not analyze):
         print("Error: Argument(s) not recognized.")
         sys.exit()
 
