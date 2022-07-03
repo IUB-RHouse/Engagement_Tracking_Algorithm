@@ -21,30 +21,41 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
     3. In the third one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program
 
 ## Recording Instructions
-1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm)`, open a terminal and run *python scripts/listener.py -r \[Duration (in seconds, optional)\]*
-- Examples of commands to run this program
-    - *python scripts/listener.py -r 5*
-        - This will record the camera RGB output for 5 seconds and then quit the program
-        - NOTE: You may end the program early by hitting *ctrl+c*
-    - *python scripts/listener.py -r*
-        - This will record the camera RGB output until someone hits *ctrl+c* on the keyboard to exit the program
+1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm)`, open a terminal and run *python scripts/listener.py \[modes\] fps=\[FPS\]*
+    - Examples of commands to run this program are below
+    - Hit *ctrl+c* to end the recording
 2. The output video will be in the output folder after the recording is finished
 3. 15fps is what is coded into this script, however, the Azure ROS Driver default is 5. You must change the default in the Azure Kinect ROS Driver driver.launch file to 15. Other options are 5, and 30. Make sure the number in this file matches the one in the driver.launch
     - If you followed the setup instructions for the Azure Kinect then these should already match, however, if you wish to change to 5 or 30 FPS make sure to change both this script and the Azure Kinect ROS Driver
     - If you are unsure whether or not the Azure Kinect and this program have matching FPS', run a sample recording and see if it seems too fast or too slow. If it is too fast/slow then follow the Azure Kinect Setup Instructions in this README starting on instruction 4
 
 ## Analysis Instructions
-1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm/`), open a terminal and run *python scripts/listener.py -a \[Duration (in seconds, optional)\]*
-- Examples of commands to run this program
-    - *python scripts/listener.py -a 5*
-        - This will run the analysis program for 5 seconds on the camera input and then quit the program
-        - NOTE: You may end the program early by hitting *ctrl+c*
-    - *python scripts/listener.py -a*
-        - This will run the analysis program until someone hits *ctrl+c* on the keyboard to exit the program.
-NOTE: There is currently no method of analysis AND recording at the same time.
+1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm/`), open a terminal and run *python scripts/listener.py -a fps=\[FPS\]*
+    - Examples of commands to run this program are below
+    - Hit *ctrl+c* to end analysis
 2. 15fps is what is coded into this script, however, the Azure ROS Driver default is 5. You must change the default in the Azure Kinect ROS Driver driver.launch file to 15. Other options are 5, and 30. Make sure the number in this file matches the one in the driver.launch
     - If you followed the setup instructions for the Azure Kinect then these should already match, however, if you wish to change to 5 or 30 FPS make sure to change both this script and the Azure Kinect ROS Driver
     - If you are unsure whether or not the Azure Kinect and this program have matching FPS', run a sample recording and see if it seems too fast or too slow. If it is too fast/slow then follow the Azure Kinect Setup Instructions in this README starting on instruction 4
+
+## Possible Arguments
+- -ra | Record all media
+    - Use this mode to activate the visual and thermal recorder. Will create two .avi videos in the output folder, one for the visual and one for the thermal 
+- -rv | Record bisual Azure topic
+    - Use this mode to record the Azure Kinect RGB topic. A .avi video file will be created in the output folder
+- -rt | Record thermal topic
+    - Use this mode to record the Boson 320 thermal topic. A .avi video file will be created in the output folder
+- -a | Run Engagement Analysis
+    - Use this mode to run the Engagement Tracking Algorithm to analyze the input topics and output an engagement metric
+- fps | Set frame rate
+    - The Azure Kinect RGB camera has an adjustable frame rate. The default is 5FPS from the Azure Kinect ROS Driver. The default for this algorithm is 15FPS. The Kinect ROS Driver and this algorithm should match, if the set frame rate in driver.launch of the Azure Kinect ROS Driver is not 15 please set this to something different by using an = and no spaces. Possible FPS' include 5, 15, and 30
+    - Example: *python scripts/listener.py -a fps=30*
+- **Examples**
+    1. Run recording of both RGB and thermal topics with an FPS of 30
+        - *python scripts/listener.py -ra fps=30*
+    2. Run analysis and record the RGB topic with an FPS of 5
+        - *python scripts/listener.py -a -ra fps=5*
+    3. Run recording of just the thermal topic
+        - *python scripts/listener.py -rt*
 
 ## Troubleshooting
 - If you get an error saying `Resource not found: azure_kinect_ros_driver`, run step 6 of the Azure Kinect Setup Instructions
