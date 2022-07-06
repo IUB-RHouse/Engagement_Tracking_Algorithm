@@ -24,8 +24,8 @@ vFilename = "output/" + now.strftime("%d_%m_%Y-%H_%M_%S") + "_RGB"
 vVid = cv.VideoWriter(vFilename + ".avi", fourCC, vFrameRate, vSize, True)
 
 ### Boson Global Variables
-tSize = (320, 256) # This is from the Boson320 /rgb/image_raw topic
-tFrameRate = 60.0
+tSize = (640, 512) # This is from the Boson320 /rgb/image_raw topic
+tFrameRate = 30.0
 tFilename = "output/" + now.strftime("%d_%m_%Y-%H_%M_%S") + "_THERMAL"
 tVid = cv.VideoWriter(tFilename + ".avi", fourCC, tFrameRate, tSize, True)
 
@@ -39,22 +39,16 @@ def argHandler():
     global vSize
 
     for arg in sys.argv:
-        print(arg)
         if(arg[0] == '-'):
-            print("Hit")
             if(arg[1:3] == "ra"):
                 recVis = True
                 recTherm = True
-                print("Hit1")
             if(arg[1:3] == "rv"):
                 recVis = True
-                print("Hit2")
             if(arg[1:3] == "rt"):
                 recTherm = True
-                print("Hit3")
             if(arg[1] == "a"):
                 analyze = True
-                print("Hit4")
         else:
             if(arg[0:5] == "fps="):
                 vFrameRate = arg[6:7]
@@ -86,7 +80,6 @@ def visualAnalysis(data):
 
 def visualRecorder(data):
     # Converting from Boson thermal image to OpenCV image and records it
-    print(vVid.isOpened())
     if(vVid.isOpened()):
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(data)
@@ -100,7 +93,7 @@ def thermalRecorder(data):
     if(tVid.isOpened()):
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(data)
-        img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
+        img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
         tVid.write(img)
     else:
         rospy.signal_shutdown("OpenCV VideoWriter is no longer open. Program ending.")
@@ -114,7 +107,6 @@ def listener():
     rospy.init_node('listener', anonymous=True)
     rospy.on_shutdown(endProgram)
     
-    print("Listen: ", recVis)
     if(recVis):
         rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
     if(recTherm):
