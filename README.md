@@ -1,5 +1,5 @@
 # Engagement Tracking Algorithm
-### Unfinished - Only working for Azure Kinect and not for the Boson
+
 ## Setup instructions (Azure Kinect)
 NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently support Ubuntu 20.04 or newer, and neither does it's ROS driver)
 1. Install ROS Melodic using [this link](https://wiki.ros.org/melodic/Installation/Ubuntu) and set it up using [this link](https://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment)
@@ -11,14 +11,20 @@ NOTE: You must be using Ubuntu 18.04 (The Azure Kinect does not currently suppor
     - **NOTE**: You will need to do this every time you reboot the computer
 
 ## Setup instructions (Engagement Algorithm)
+#complete step 1 and 2 only if you have not done so on your computer. 
 1. Clone this repo by clicking the colored "Code" button on this page and copying the link. Go into catkin_ws/src/ and type in *git clone \[link\]*
 2. In `catkin_ws/` run *catkin_make*
+
+#complete these steps every time.
+1. navigate to catkin_ws
 3. After that, run *source devel/setup.bash*
-4. Everytime you plan to run this program, open three terminals (or three tabs in a terminal)
+4. Everytime you plan to run this program, open four terminals (or three tabs in a terminal)
     1. In the first one run the *roscore* command
     2. In the second one go to `catkin_ws/src/azure_kinect_ros_driver/launch/` and run *roslaunch driver.launch*
-        - If you get an error saying `Resource not found: azure_kinect_ros_driver`, run step 6 of the Azure Kinect Setup Instructions
-    3. In the third one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program
+        - If you get an error saying `Resource not found: azure_kinect_ros_driver`, run *source devel/setup.bash* in the main 'catkin_ws' folder.
+    3. In the third one go to '/catkin_ws/src/flir_boson_usb/launch/' and run *roslaunch flir_boson.launch*
+        - If you get an error saying `Resource not found: flir_boson`, run *source devel/setup.bash* in the main 'catkin_ws' folder.
+    4. In the fourth one go to `catkin_ws/src/Engagement_Tracking_Algorithm/`. You will use this terminal to run this algorithm. Please read "Recording Instructions" or "Analysis Instructions" for how to run this program
 
 ## Recording Instructions
 1. In the root of this folder (which should be `~/catkin_ws/src/Engagement_Tracking_Algorithm)`, open a terminal and run *python scripts/listener.py \[modes\] fps=\[FPS\]*
