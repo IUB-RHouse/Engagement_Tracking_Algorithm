@@ -1,4 +1,4 @@
 <launch>
-    <node name="analysis" pkg="engagement_queue_tracking" type="scripts/analysis.py" output="screen"/>
-    <node name="recorder" pkg="engagement_queue_tracking" type="scripts/recorder.py" output="screen"/>
+    <node name="analysis" pkg="engagement_queue_tracking" type="analysis.py" output="screen"/>
+    <node name="recorder" pkg="engagement_queue_tracking" type="recorder.py" output="screen"/>
 </launch>

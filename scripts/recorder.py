@@ -57,8 +57,8 @@ def listener():
     rospy.init_node('recorder', anonymous=True)
     rospy.on_shutdown(endProgram)
     
-    rospy.Subscriber("/rgb/image_raw", Img, visualAnalysis)
-    rospy.Subscriber("/flir_boson/image_raw", Img, visualAnalysis)\
+    rospy.Subscriber("/rgb/image_raw", Img, visualRecorder)
+    rospy.Subscriber("/flir_boson/image_raw", Img, thermalRecorder)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
