@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
 The program will do the following steps:
-1. find location of nose on rgb image
-2. color the nose part as white
-3. save the image
+1. find face rectangle on rgb image
+2. find location of nose on rgb image
+3. color the nose part as white
+4. save the image
 '''
 import os
 import cv2
