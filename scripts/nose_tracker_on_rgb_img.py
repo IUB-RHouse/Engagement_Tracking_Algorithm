@@ -72,11 +72,11 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
 
     nose_find = cv2.bitwise_and(img, img, mask=mask)
     if save:
-        for i in range(len(nose_find)):
-            for j in range(len(nose_find[i])):
-                if sum(nose_find[i][j]) != 0:
-                    img[i][j] = [255, 255, 255]
-
+        non_zero = np.nonzero(nose_find)
+        i = 0
+        while i < len(non_zero[0]):
+            img[non_zero[0][i]][non_zero[1][i]] = [255, 255, 255]
+            i += 3
         cv2.imwrite('{}{}'.format(save_dir, save_frame.format(img_name)), img)
         return
     else:
