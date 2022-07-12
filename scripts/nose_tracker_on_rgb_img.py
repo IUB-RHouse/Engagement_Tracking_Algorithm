@@ -44,6 +44,14 @@ def feature_on_mask(mask, side, shape):
 
 
 ############################################
+def draw_rectangle(img2, rect, save_dir, img_name):
+    img2[rect[1]: rect[3] + 1, rect[0]] = [255, 255, 255]
+    img2[rect[1]: rect[3] + 1:, rect[2]] = [255, 255, 255]
+    img2[rect[1], rect[0]: rect[2] + 1] = [255, 255, 255]
+    img2[rect[3], rect[0]: rect[2] + 1] = [255, 255, 255]
+    return img2
+
+
 def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}.jpg'):
     rects = find_faces(img, face_model)
     if not rects:
@@ -52,6 +60,9 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
         else:
             return None, None
     rect = rects[0]
+    for edg in range(4):
+        rect[edg] = max(0, rect[edg])
+    img = draw_rectangle(img2=img, rect=rect, save_dir=save_dir, img_name=img_name)
 
     shape = detect_marks(img, landmark_model, rect)
     mask = np.zeros(img.shape[:2], dtype=np.uint8)
@@ -60,7 +71,6 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
     mask = cv2.dilate(mask, kernel, 5)
 
     nose_find = cv2.bitwise_and(img, img, mask=mask)
-    # eyes = cv2.bitwise_and(img, img, mask=mask)
     if save:
         for i in range(len(nose_find)):
             for j in range(len(nose_find[i])):
@@ -73,8 +83,9 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
         return img, nose_find
 
 
-#################################################
+#######################################################################################
 if __name__ == '__main__':
+    os.chdir('RHouse/Proctoring')
     face_model = get_face_detector()
     landmark_model = get_landmark_model()
     nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
@@ -85,4 +96,5 @@ if __name__ == '__main__':
         if file.endswith('.jpg') or file.endswith('.png'):
             img_name = file
             img = cv2.imread('{}{}'.format(pic_dir, img_name))
-            img_nose_label(img, img_name, face_model, nose_point=nose_label, save_dir=True)
+            img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True)
+
