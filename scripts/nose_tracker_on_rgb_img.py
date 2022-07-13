@@ -59,11 +59,9 @@ def draw_rectangle(img2, rect, save_dir, img_name):
     img2[rect[1], rect[0]: rect[2] + 1] = [255, 255, 255]
     img2[rect[3], rect[0]: rect[2] + 1] = [255, 255, 255]
     return img2
-    # save_rect_frame = 'test_rect_{}.jpg'
-    # cv2.imwrite('{}{}'.format(save_dir, save_rect_frame.format(img_name)), img2)
 
 
-def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}'):
+def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
     rects = find_faces(img, face_model)
     if not rects:
         if save:
@@ -97,7 +95,7 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
         cv2.imwrite('{}{}'.format(save_dir, save_frame.format(img_name)), img)
         #  Save rectangle info
         rect_info = {'rect': rect, 'nose_area': non_zero}
-        np.save(save_dir + 'rectangle_info/' + save_frame.format(img_name).replace('.jpg', '.npy'), rect_info, allow_pickle=True)
+        np.save(save_dir + 'rectangle_info/' + save_frame.format(img_name).replace('.{}'.format(img_type), '.npy'), rect_info, allow_pickle=True)
         return
     else:
         return img, nose_find
@@ -113,8 +111,11 @@ if __name__ == '__main__':
     # test img
     pic_dir = 'pic_test/'
     for file in os.listdir(pic_dir):
-        if file.endswith('.jpg') or file.endswith('.png'):
+        if file.endswith('.jpg') or file.endswith('.png') or file.endswith('.jpeg'):
             img_name = file
             img = cv2.imread('{}{}'.format(pic_dir, img_name))
-            img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True)
+            img_type = img_name.split('.')[-1]
+            img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True, img_type=img_type)
+
+
 
