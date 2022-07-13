@@ -13,6 +13,14 @@ from proctoring.face_detector import get_face_detector, find_faces
 from proctoring.face_landmarks import get_landmark_model, detect_marks
 
 
+def try_make_dir(dir1):
+    try:
+        os.mkdir(dir1)
+        print('create new dir: {}'.format(dir1))
+    except:
+        pass
+
+
 def feature_on_mask(mask, side, shape):
     """
     Create ROI on mask of the size of eyes and also find the extreme points of select feature
@@ -51,9 +59,11 @@ def draw_rectangle(img2, rect, save_dir, img_name):
     img2[rect[1], rect[0]: rect[2] + 1] = [255, 255, 255]
     img2[rect[3], rect[0]: rect[2] + 1] = [255, 255, 255]
     return img2
+    # save_rect_frame = 'test_rect_{}.jpg'
+    # cv2.imwrite('{}{}'.format(save_dir, save_rect_frame.format(img_name)), img2)
 
 
-def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}.jpg'):
+def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}'):
     rects = find_faces(img, face_model)
     if not rects:
         if save:
@@ -73,18 +83,27 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
 
     nose_find = cv2.bitwise_and(img, img, mask=mask)
     if save:
+        for dir_i in [save_dir, save_dir + 'rectangle_info/']:
+            try_make_dir(dir_i)
+        # Save img
         non_zero = np.nonzero(nose_find)
+        '''
+        non_zero = (array([165, 165, 165, ..., 188, 188, 188], dtype=int64), array([717, 717, 717, ..., 728, 728, 728], dtype=int64), array([0, 1, 2, ..., 0, 1, 2], dtype=int64))
+        '''
         i = 0
         while i < len(non_zero[0]):
             img[non_zero[0][i]][non_zero[1][i]] = [255, 255, 255]
             i += 3
         cv2.imwrite('{}{}'.format(save_dir, save_frame.format(img_name)), img)
+        #  Save rectangle info
+        rect_info = {'rect': rect, 'nose_area': non_zero}
+        np.save(save_dir + 'rectangle_info/' + save_frame.format(img_name).replace('.jpg', '.npy'), rect_info, allow_pickle=True)
         return
     else:
         return img, nose_find
 
 
-#######################################################################################
+#################################################
 if __name__ == '__main__':
     os.chdir('RHouse/Proctoring')
     face_model = get_face_detector()
