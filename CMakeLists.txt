@@ -7,6 +7,6 @@ catkin_package(
   CATKIN_DEPENDS message_runtime
 )
 
-catkin_install_python(PROGRAMS scripts/listener.py
+catkin_install_python(PROGRAMS scripts/analysis.py scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
