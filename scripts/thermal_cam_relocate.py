@@ -1,3 +1,8 @@
+import os
+import cv2
+import numpy as np
+
+
 golden_corner = (705, 995, 850, 1177)
 '''
 the four values reponse to upper, left, lower, right
