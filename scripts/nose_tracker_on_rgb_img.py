@@ -97,7 +97,7 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
             i += 3
         cv2.imwrite('{}{}'.format(save_dir, save_frame.format(img_name)), img)
         #  Save rectangle info
-        rect_info = {'rect': rect, 'nose_area': non_zero}
+        rect_info = {'rect': rect, 'nose_area': non_zero, 'nosetip_point': nose_points_find}
         np.save(save_dir + 'rectangle_info/' + save_frame.format(img_name).replace('.{}'.format(img_type), '.npy'), rect_info, allow_pickle=True)
         return
     else:
