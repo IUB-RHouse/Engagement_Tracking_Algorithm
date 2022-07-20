@@ -45,15 +45,18 @@ def feature_on_mask(mask, side, shape):
     points = [shape[i] for i in side]
     points = np.array(points, dtype=np.int32)
     mask = cv2.fillConvexPoly(mask, points, 255)
-    l = points[0][0]
-    t = (points[1][1] + points[2][1]) // 2
-    r = points[3][0]
-    b = (points[4][1] + points[5][1]) // 2
+    if len(points) == 1:
+        return mask, [points[0][0], points[0][1], points[0][0], points[0][1]]
+    else:
+        l = points[0][0]
+        t = (points[1][1] + points[2][1]) // 2
+        r = points[3][0]
+        b = (points[4][1] + points[5][1]) // 2
     return mask, [l, t, r, b]
 
 
 ############################################
-def draw_rectangle(img2, rect, save_dir, img_name):
+def draw_rectangle(img2, rect):
     img2[rect[1]: rect[3] + 1, rect[0]] = [255, 255, 255]
     img2[rect[1]: rect[3] + 1:, rect[2]] = [255, 255, 255]
     img2[rect[1], rect[0]: rect[2] + 1] = [255, 255, 255]
@@ -71,7 +74,7 @@ def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='p
     rect = rects[0]
     for edg in range(4):
         rect[edg] = max(0, rect[edg])
-    img = draw_rectangle(img2=img, rect=rect, save_dir=save_dir, img_name=img_name)
+    img = draw_rectangle(img2=img, rect=rect)
 
     shape = detect_marks(img, landmark_model, rect)
     mask = np.zeros(img.shape[:2], dtype=np.uint8)
@@ -106,7 +109,10 @@ if __name__ == '__main__':
     os.chdir('RHouse/Proctoring')
     face_model = get_face_detector()
     landmark_model = get_landmark_model()
-    nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
+    # left = [36, 37, 38, 39, 40, 41]
+    # right = [42, 43, 44, 45, 46, 47]
+    # nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
+    nose_label = [30]  #nosetip
 
     # test img
     pic_dir = 'pic_test/'
@@ -115,7 +121,7 @@ if __name__ == '__main__':
             img_name = file
             img = cv2.imread('{}{}'.format(pic_dir, img_name))
             img_type = img_name.split('.')[-1]
-            img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True, img_type=img_type)
+            img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True, img_type=img_type, save_frame='test_nosetip_{}')
 
 
 
