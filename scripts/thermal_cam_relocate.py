@@ -91,5 +91,8 @@ thermal_manual_center = get_manually_label_location(thermal_mask_img)
 thermal_cam_coor = calculate_thermal_cam_coordinate_on_rgb_img(rgb_manual_center, thermal_manual_center)
 print(thermal_cam_coor)
 # (697, 984, 862, 1190)
+np.save(video_img_dir + 'thermal_cam_coordinate.npy', {'upper': thermal_cam_coor[0], 'left': thermal_cam_coor[1], 'lower': thermal_cam_coor[2],
+         'right': thermal_cam_coor[3]}, allow_pickle=True)
 
-test_relocate_image(relocate_rgb_dir, possi_coor=thermal_cam_coor, file='06_07_2022-14_23_27_RGB-00000040.jpg')
+test_image = '06_07_2022-14_23_27_RGB-00000040.jpg'
+test_relocate_image(relocate_rgb_dir, possi_coor=thermal_cam_coor, file=test_image)
