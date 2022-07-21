@@ -64,7 +64,7 @@ def draw_rectangle(img2, rect):
     return img2
 
 
-def img_nose_label(img, img_name, face_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
+def img_nose_label(img, img_name, face_model, landmark_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
     rects = find_faces(img, face_model)
     if not rects:
         if save:
@@ -122,6 +122,4 @@ if __name__ == '__main__':
             img = cv2.imread('{}{}'.format(pic_dir, img_name))
             img_type = img_name.split('.')[-1]
             img_nose_label(img, img_name, face_model, nose_point=nose_label, save=True, img_type=img_type, save_frame='test_nosetip_{}')
-
-
 
