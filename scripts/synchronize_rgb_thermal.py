@@ -9,23 +9,25 @@ from grid_video_to_img import grid_video
 
 
 class NoseTracking():
-    def __init__(self, file_title='06_07_2022-14_23_27', video_img_dir='video/06_07_2022-14_23_27'):
-        self.nose_label = [30]  # only nose tip point
-        self.video_img_dir = video_img_dir
+    def __init__(self, file_title='06_07_2022-14_23_27', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/'):
+        # self.nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
+        self.nose_label = [30]
+        self.video_img_dir = 'RHouse/video/{}/'.format(file_title)
         self.file_title = file_title
         self.rgb_file_name = '{}_RGB_grid/'.format(self.file_title)
         self.thermal_file_name = '{}_THERMAL_grid/'.format(self.file_title)
-        self.face_model = get_face_detector()
-        self.landmark_model = get_landmark_model()
+        self.main_dir = main_dir
+        self.face_model = get_face_detector(main_dir=main_dir)
+        self.landmark_model = get_landmark_model(self.main_dir + 'models/pose_model')
         self.pic_dir = self.video_img_dir + self.rgb_file_name
-        self.coor_dict = np.load(self.video_img_dir + 'thermal_cam_coordinate.npy', allow_pickle=True).item()
+        self.coor_dict = np.load(coor_dict_path + 'thermal_cam_coordinate.npy', allow_pickle=True).item()
 
-    def grid_video_to_img(self, max_pic_n=30, visual_interval=10):
+    def grid_video_to_img(self, max_pic_n=30, visual_interval=15, video_form='{}_RGB.avi'):
         # Visual Video
-        f = '{}_RGB.avi'.format(self.file_title)
-        grid_video(f, self.video_img_dir , max_pic_n, visual_interval)
+        f = video_form.format(self.file_title)
+        grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
         # Thermal Video
-        f = '{}_THERMAL.avi'.format(self.file_title)
+        f = video_form.format(self.file_title).replace('RGB', 'THERMAL')
         grid_video(f,self.video_img_dir , max_pic_n, visual_interval * 2)
 
     def nose_detect_on_rgb_img(self):
@@ -33,7 +35,7 @@ class NoseTracking():
             if file.endswith('.jpg') or file.endswith('.png'):
                 img_name = file
                 img = cv2.imread('{}{}'.format(self.pic_dir, img_name))
-                img_nose_label(img, img_name, self.face_model, nose_point=self.nose_label, save=True, save_dir=self.pic_dir + 'test/', save_frame='test_nosetip_{}')
+                img_nose_label(img, img_name, self.face_model, self.landmark_model, nose_point=self.nose_label, save=True, save_dir=self.pic_dir + 'test/', save_frame='test_nosetip_{}')
 
     def find_response_area_on_thermal(self, rect_info_dir, file, thermal_img_name, height_adj_para=None):
         """
@@ -101,7 +103,7 @@ class NoseTracking():
 
     def apply_on_thermal_img(self):
         rect_info_dir = self.pic_dir + 'test/rectangle_info/'
-        height_adj_para = None
+        # height_adj_para = None
         try_make_dir(dir1=self.video_img_dir + self.thermal_file_name + 'test/')
         for file in os.listdir(rect_info_dir):
             id = file[:-4].split('-')[-1]
@@ -111,6 +113,7 @@ class NoseTracking():
                 print('Cannot find {}'.format(thermal_img_name))
                 break
             self.find_response_area_on_thermal_v2(rect_info_dir, file, thermal_img_name)
+            # find_response_area_on_thermal_v2(self, rect_info_dir, file, thermal_img_name)
 
 
 #########################################################
@@ -118,5 +121,12 @@ class NoseTracking():
 if __name__ == '__main__':
     NT = NoseTracking()
     NT.grid_video_to_img()
+    NT.nose_detect_on_rgb_img()
+    NT.apply_on_thermal_img()
+
+    ###############
+    # Demo for MS_test1_RGB.avi
+    NT = NoseTracking(file_title='MS_test1', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/')
+    NT.grid_video_to_img(max_pic_n=-1, visual_interval=15, video_form='MS_test1_RGB.avi')
     NT.nose_detect_on_rgb_img()
     NT.apply_on_thermal_img()
