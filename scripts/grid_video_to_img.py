@@ -1,12 +1,9 @@
-'''
-G
-'''
 import os
 import cv2
 import numpy as np
 
 
-def grid_video(f, video_route, img_max=None, grid_interval=10):
+def grid_video(f, video_route, img_max=-1, grid_interval=15):
     vc = cv2.VideoCapture(video_route + f)
     fps = vc.get(cv2.CAP_PROP_FPS)
     frame_count = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -17,7 +14,7 @@ def grid_video(f, video_route, img_max=None, grid_interval=10):
         os.mkdir(grid_file)
     except:
         pass
-    if img_max is None:
+    if img_max < 0:
         img_max = np.Inf
     n = 0
     for idx in range(frame_count):
@@ -32,10 +29,11 @@ def grid_video(f, video_route, img_max=None, grid_interval=10):
             file_name = '{}{}-{:08d}.jpg'.format(grid_file, f[:-4], idx)
             cv2.imwrite(file_name, frame)
             n += 1
+        # print("\rprocess: {}/{}".format(idx + 1, frame_count), end='')
         if n >= img_max:
             break
     vc.release()
-    print('total img: {}'.format(len(os.listdir(grid_file))))
+    print('total img: {}'.format(n))
     
 
 ########################################
