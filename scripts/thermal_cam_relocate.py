@@ -69,6 +69,7 @@ def test_relocate_image(relocate_rgb_dir, possi_coor, file = '06_07_2022-14_23_2
 #################################################################################################################
 file_title = '06_07_2022-14_23_27'
 video_img_dir = 'video/06_07_2022-14_23_27/'  # where video stored
+dict_save_path = 'video/'
 rgb_file_name = '{}_RGB_grid/'.format(file_title)
 thermal_file_name = '{}_THERMAL_grid/'.format(file_title)
 relocate_rgb_dir = video_img_dir + rgb_file_name + 'relocate_task/'
@@ -91,7 +92,7 @@ thermal_manual_center = get_manually_label_location(thermal_mask_img)
 thermal_cam_coor = calculate_thermal_cam_coordinate_on_rgb_img(rgb_manual_center, thermal_manual_center)
 print(thermal_cam_coor)
 # (697, 984, 862, 1190)
-np.save(video_img_dir + 'thermal_cam_coordinate.npy', {'upper': thermal_cam_coor[0], 'left': thermal_cam_coor[1], 'lower': thermal_cam_coor[2],
+np.save(dict_save_path + 'thermal_cam_coordinate.npy', {'upper': thermal_cam_coor[0], 'left': thermal_cam_coor[1], 'lower': thermal_cam_coor[2],
          'right': thermal_cam_coor[3]}, allow_pickle=True)
 
 test_image = '06_07_2022-14_23_27_RGB-00000040.jpg'
