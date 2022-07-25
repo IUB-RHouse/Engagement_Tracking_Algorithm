@@ -130,7 +130,7 @@ class NoseTracking():
             if file.endswith('.npy'):
                 record_i = np.load(self.video_img_dir + self.thermal_file_name + 'test/' + file, allow_pickle=True).item()
                 ts_record[int(file.split('-')[1][:-4])] = record_i
-        ts_df = pd.DataFrame.from_dict(ts_record)
+        ts_df = pd.DataFrame.from_dict(ts_record).transpose()
         return ts_df
 
 
@@ -148,3 +148,4 @@ if __name__ == '__main__':
     NT.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form='MS_test1_RGB.avi')
     NT.nose_detect_on_rgb_img()
     NT.apply_on_thermal_img()
+    pixel_data = NT.time_series_nosetip_pixel()
