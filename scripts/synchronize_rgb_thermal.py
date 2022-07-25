@@ -155,4 +155,4 @@ if __name__ == '__main__':
     ###############
     # Demo for MS_test1_RGB.avi
     NT = NoseTracking(file_title='MS_test1', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/')
-    pixel_df = NT.main(video_form='MS_test2_RGB.avi')
+    pixel_df = NT.main(video_form='MS_test1_RGB.avi')
