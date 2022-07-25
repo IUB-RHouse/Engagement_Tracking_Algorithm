@@ -132,6 +132,15 @@ class NoseTracking():
                 ts_record[int(file.split('-')[1][:-4])] = record_i
         ts_df = pd.DataFrame.from_dict(ts_record).transpose()
         return ts_df
+    
+    def main(self, video_form='MS_test2_RGB.avi'):
+        tstart = time.time()
+        self.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form=video_form)
+        self.nose_detect_on_rgb_img()
+        self.apply_on_thermal_img()
+        pixel_data = self.time_series_nosetip_pixel()
+        print('usage time=', time.time() - tstart)
+        print(pixel_data)
 
 
 #########################################################
@@ -145,7 +154,4 @@ if __name__ == '__main__':
     ###############
     # Demo for MS_test1_RGB.avi
     NT = NoseTracking(file_title='MS_test1', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/')
-    NT.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form='MS_test1_RGB.avi')
-    NT.nose_detect_on_rgb_img()
-    NT.apply_on_thermal_img()
-    pixel_data = NT.time_series_nosetip_pixel()
+    NT.main(video_form='MS_test2_RGB.avi')
