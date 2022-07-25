@@ -89,17 +89,26 @@ class NoseTracking():
         nosetip_y = round((rect_info['nosetip_point'][1] - y1) * w2 / (x2 - x1))
         if (nosetip_y >= h2) or (nosetip_x >= w2):
             # detected nosetip point is out of thermal camera
-            pass
+            nosetip_pixel = None
         else:
+            nosetip_pixel = thermal_img[nosetip_y, nosetip_x][0]
+            # pixel_at_nose += img[5][5]  # replace with the pixels at the nosetip
+            # if taking an average, then save the pixels in the different regions
+
+        check_point = thermal_img[0, 0][0]  # a point in the top corner (black point) - that does not omit thermal heat
+        if label_nosetip:
             for i in range(-10, 10):
                 try:
-                    thermal_img[nosetip_y + i, nosetip_x + i] = [0, 0, 0]
-                    thermal_img[nosetip_y + i, nosetip_x - i] = [0, 0, 0]
+                    thermal_img[nosetip_y + i, nosetip_x + i] = [255, 255, 255]
+                    thermal_img[nosetip_y + i, nosetip_x - i] = [255, 255, 255]
                 except:
                     pass
         cv2.imwrite(self.video_img_dir + self.thermal_file_name + 'test/' + thermal_img_name, thermal_img)
+
         np.save(self.video_img_dir + self.thermal_file_name + 'test/' + 'nosetip_point_{}.npy'.format(
-            thermal_img_name.split('.')[0]), {'nosetip_x': nosetip_x, 'nosetip_y': nosetip_y}, allow_pickle=True)
+            thermal_img_name.split('.')[0]), {'nosetip_x': nosetip_x, 'nosetip_y': nosetip_y, 'pixel_value': nosetip_pixel, 'check_point': check_point}, allow_pickle=True)
+        # need to identify a point in the top corner (black point) - that does not omit thermal heat
+        # find the temperature at that point
 
     def apply_on_thermal_img(self):
         rect_info_dir = self.pic_dir + 'test/rectangle_info/'
