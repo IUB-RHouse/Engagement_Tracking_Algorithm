@@ -37,42 +37,42 @@ class NoseTracking():
                 img = cv2.imread('{}{}'.format(self.pic_dir, img_name))
                 img_nose_label(img, img_name, self.face_model, self.landmark_model, nose_point=self.nose_label, save=True, save_dir=self.pic_dir + 'test/', save_frame='test_nosetip_{}')
 
-    def find_response_area_on_thermal(self, rect_info_dir, file, thermal_img_name, height_adj_para=None):
-        """
-        We can abandon this function....
-        """
-        rect_info = np.load(rect_info_dir + file, allow_pickle=True).item()
-        thermal_img = cv2.imread(self.video_img_dir + self.thermal_file_name + thermal_img_name)
-        x1, x2 = rect_info['rect'][0], rect_info['rect'][2]
-        y1, y2 = rect_info['rect'][1], rect_info['rect'][3]
-        w1, w2 = 0, len(thermal_img[0])
-        h1, h2 = 0, len(thermal_img)
-        # ki, kj = 0, 0
-        k_left = (min(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
-        k_right = (max(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
-        # thermal_img[:, round(k_left)] = [0, 0, 0]
-        # thermal_img[:, round(k_right)] = [0, 0, 0]
-        scale_para = (w2 - w1) / (x2 - x1)
-        visual_nose_length = max(rect_info['nose_area'][0]) - min(rect_info['nose_area'][0])
-        nose_length_after_scale = round(visual_nose_length * scale_para)
-        if height_adj_para is None:
-            try_make_dir(self.video_img_dir + self.thermal_file_name + 'test1/')
-            m = round(h2 // 3)
-            goal_m = m
-            min_color = 255
-            while m < h2 - nose_length_after_scale:
-                mean_color = np.mean(thermal_img[m:m + nose_length_after_scale, round(k_left): round(k_right)])
-                # print(m, mean_color)
-                if mean_color < min_color:
-                    min_color = mean_color
-                    goal_m = m
-                m += 10
-            thermal_img_tmp = thermal_img.copy()
-            thermal_img_tmp[goal_m, round(k_left): round(k_right)] = [0, 0, 0]
-            thermal_img_tmp[goal_m + nose_length_after_scale, round(k_left): round(k_right)] = [0, 0, 0]
-            thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_left)] = [0, 0, 0]
-            thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_right)] = [0, 0, 0]
-            cv2.imwrite(self.video_img_dir + self.thermal_file_name + 'test1/m{}_'.format(m) + thermal_img_name, thermal_img_tmp)
+#     def find_response_area_on_thermal(self, rect_info_dir, file, thermal_img_name, height_adj_para=None):
+#         """
+#         We can abandon this function....
+#         """
+#         rect_info = np.load(rect_info_dir + file, allow_pickle=True).item()
+#         thermal_img = cv2.imread(self.video_img_dir + self.thermal_file_name + thermal_img_name)
+#         x1, x2 = rect_info['rect'][0], rect_info['rect'][2]
+#         y1, y2 = rect_info['rect'][1], rect_info['rect'][3]
+#         w1, w2 = 0, len(thermal_img[0])
+#         h1, h2 = 0, len(thermal_img)
+#         # ki, kj = 0, 0
+#         k_left = (min(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
+#         k_right = (max(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
+#         # thermal_img[:, round(k_left)] = [0, 0, 0]
+#         # thermal_img[:, round(k_right)] = [0, 0, 0]
+#         scale_para = (w2 - w1) / (x2 - x1)
+#         visual_nose_length = max(rect_info['nose_area'][0]) - min(rect_info['nose_area'][0])
+#         nose_length_after_scale = round(visual_nose_length * scale_para)
+#         if height_adj_para is None:
+#             try_make_dir(self.video_img_dir + self.thermal_file_name + 'test1/')
+#             m = round(h2 // 3)
+#             goal_m = m
+#             min_color = 255
+#             while m < h2 - nose_length_after_scale:
+#                 mean_color = np.mean(thermal_img[m:m + nose_length_after_scale, round(k_left): round(k_right)])
+#                 # print(m, mean_color)
+#                 if mean_color < min_color:
+#                     min_color = mean_color
+#                     goal_m = m
+#                 m += 10
+#             thermal_img_tmp = thermal_img.copy()
+#             thermal_img_tmp[goal_m, round(k_left): round(k_right)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m + nose_length_after_scale, round(k_left): round(k_right)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_left)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_right)] = [0, 0, 0]
+#             cv2.imwrite(self.video_img_dir + self.thermal_file_name + 'test1/m{}_'.format(m) + thermal_img_name, thermal_img_tmp)
 
     def find_response_area_on_thermal_v2(self, rect_info_dir, file, thermal_img_name):
         """
@@ -114,6 +114,15 @@ class NoseTracking():
                 break
             self.find_response_area_on_thermal_v2(rect_info_dir, file, thermal_img_name)
             # find_response_area_on_thermal_v2(self, rect_info_dir, file, thermal_img_name)
+     
+    def time_series_nosetip_pixel(self):
+        ts_record = {}
+        for file in os.listdir(self.video_img_dir + self.thermal_file_name + 'test/'):
+            if file.endswith('.npy'):
+                record_i = np.load(self.video_img_dir + self.thermal_file_name + 'test/' + file, allow_pickle=True).item()
+                ts_record[int(file.split('-')[1][:-4])] = record_i
+        ts_df = pd.DataFrame.from_dict(ts_record)
+        return ts_df
 
 
 #########################################################
@@ -127,6 +136,6 @@ if __name__ == '__main__':
     ###############
     # Demo for MS_test1_RGB.avi
     NT = NoseTracking(file_title='MS_test1', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/')
-    NT.grid_video_to_img(max_pic_n=-1, visual_interval=15, video_form='MS_test1_RGB.avi')
+    NT.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form='MS_test1_RGB.avi')
     NT.nose_detect_on_rgb_img()
     NT.apply_on_thermal_img()
