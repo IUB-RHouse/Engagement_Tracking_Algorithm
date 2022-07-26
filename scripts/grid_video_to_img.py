@@ -38,6 +38,6 @@ def grid_video(f, video_route, img_max=-1, grid_interval=15):
 
 ########################################
 if __name__ == '__main__':
-    video_route = 'video/'
+    video_route = 'scripts/video/'
     f = 'May_Leigh_RGB_trial.mp4'
     grid_video(f, video_route, 123, 10)
