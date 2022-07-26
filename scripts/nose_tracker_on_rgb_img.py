@@ -9,8 +9,8 @@ The program will do the following steps:
 import os
 import cv2
 import numpy as np
-from proctoring.face_detector import get_face_detector, find_faces
-from proctoring.face_landmarks import get_landmark_model, detect_marks
+from protoring.face_detector import get_face_detector, find_faces
+from protoring.face_landmarks import get_landmark_model, detect_marks
 
 
 def try_make_dir(dir1):
@@ -106,7 +106,7 @@ def img_nose_label(img, img_name, face_model, landmark_model, nose_point, save=T
 
 #################################################
 if __name__ == '__main__':
-    os.chdir('RHouse/Proctoring')
+    os.chdir('proctoring')
     face_model = get_face_detector()
     landmark_model = get_landmark_model()
     # left = [36, 37, 38, 39, 40, 41]
