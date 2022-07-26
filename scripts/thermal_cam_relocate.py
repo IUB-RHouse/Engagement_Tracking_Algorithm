@@ -68,8 +68,8 @@ def test_relocate_image(relocate_rgb_dir, possi_coor, file = '06_07_2022-14_23_2
 
 #################################################################################################################
 file_title = '06_07_2022-14_23_27'
-video_img_dir = 'video/06_07_2022-14_23_27/'  # where video stored
-dict_save_path = 'video/'
+video_img_dir = 'scripts/video/06_07_2022-14_23_27/'  # where video stored
+dict_save_path = 'scripts/video/'
 rgb_file_name = '{}_RGB_grid/'.format(file_title)
 thermal_file_name = '{}_THERMAL_grid/'.format(file_title)
 relocate_rgb_dir = video_img_dir + rgb_file_name + 'relocate_task/'
