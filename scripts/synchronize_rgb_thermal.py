@@ -9,10 +9,10 @@ from grid_video_to_img import grid_video
 
 
 class NoseTracking():
-    def __init__(self, file_title='06_07_2022-14_23_27', main_dir='script/protoring/', coor_dict_path='script/video/'):
+    def __init__(self, file_title='06_07_2022-14_23_27', main_dir='scripts/protoring/', coor_dict_path='scripts/video/'):
         # self.nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
         self.nose_label = [30]
-        self.video_img_dir = 'script/video/{}/'.format(file_title)
+        self.video_img_dir = 'scripts/video/{}/'.format(file_title)
         self.file_title = file_title
         self.rgb_file_name = '{}_RGB_grid/'.format(self.file_title)
         self.thermal_file_name = '{}_THERMAL_grid/'.format(self.file_title)
@@ -154,5 +154,5 @@ if __name__ == '__main__':
 
     ###############
     # Demo for MS_test1_RGB.avi
-    NT = NoseTracking(file_title='MS_test1', main_dir='script/protoring/', coor_dict_path='script/video/')
+    NT = NoseTracking(file_title='MS_test1', main_dir='scripts/protoring/', coor_dict_path='scripts/video/')
     pixel_df = NT.main(video_form='MS_test1_RGB.avi')
