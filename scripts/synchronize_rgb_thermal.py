@@ -4,32 +4,33 @@ Apply the location information got from rgb image on thermal image
 import os
 import cv2
 import numpy as np
-from nose_tracker_on_rgb_img import *
-from grid_video_to_img import grid_video
-
+import pandas as pd
+import time
+from scripts.nose_tracker_on_rgb_img import *
+from scripts.grid_video_to_img import grid_video
 
 
 class NoseTracking():
     def __init__(self, file_title='06_07_2022-14_23_27', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/'):
         # self.nose_label = [28, 29, 30, 31, 32, 33, 34, 35]
         self.nose_label = [30]
-        self.video_img_dir = r'D://Andrew/U/IUB_MSDS/pythonProject/RHouse/video/{}/'.format(file_title)
+        self.video_img_dir = '{}{}/'.format(coor_dict_path, file_title)
         self.file_title = file_title
         self.rgb_file_name = '{}_RGB_grid/'.format(self.file_title)
         self.thermal_file_name = '{}_THERMAL_grid/'.format(self.file_title)
         self.main_dir = main_dir
-        self.face_model = get_face_detector(main_dir=main_dir)
-        self.landmark_model = get_landmark_model(self.main_dir + 'models/pose_model')
+        self.face_model = get_face_detector(model_dir=self.main_dir + 'protoring/models/')
+        self.landmark_model = get_landmark_model(self.main_dir + 'protoring/models/pose_model')
         self.pic_dir = self.video_img_dir + self.rgb_file_name
         self.coor_dict = np.load(coor_dict_path + 'thermal_cam_coordinate.npy', allow_pickle=True).item()
 
-    def grid_video_to_img(self, max_pic_n=30, visual_interval=15, video_form='{}_RGB.avi'):
+    def grid_video_to_img(self, max_pic_n=-1, visual_interval=1, video_form='{}_RGB.avi'):
         # Visual Video
         f = video_form.format(self.file_title)
         rgb_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
         # Thermal Video
         f = video_form.format(self.file_title).replace('RGB', 'THERMAL')
-        thermal_frame_count = grid_video(f,self.video_img_dir , max_pic_n, visual_interval * 2, default_frame_count= rgb_frame_count * 2)
+        thermal_frame_count = grid_video(f,self.video_img_dir , max_pic_n, visual_interval * 2)
 
     def nose_detect_on_rgb_img(self):
         for file in os.listdir(self.pic_dir):
@@ -151,12 +152,19 @@ class NoseTracking():
         pixel_data['thermal_frame_index'] = pixel_data.index
         print('usage time=', time.time() - tstart)
         print(pixel_data.head())
-        pixel_data.to_csv(self.video_img_dir + self.thermal_file_name + 'test/pixel_df.csv', line_terminator='\n')
+        pixel_data.to_csv(self.video_img_dir + 'pixel_df.csv', line_terminator='\n')
+        print('pixel data is stored at {}'.format(self.video_img_dir + 'pixel_df.csv'))
         return pixel_data
 
 
 #########################################################
 #########################################################
 if __name__ == '__main__':
-    NT = NoseTracking(file_title='MS_rps1', main_dir='RHouse/Proctoring/', coor_dict_path='RHouse/video/')
-    pixel_df = NT.main(video_form='MS_rps1_RGB.avi')
+    '''
+    Please see scripts/video/README.md
+    Please see scripts/protoring/models/pose_model/pose_model/ReadMe.md
+    In this demo, we apply on MS_test1_RGB.avi and MS_test1_THERMAL.avi. So we have to store these two video in folder "scripts/video/MS_test1/".
+    Similarly, if we want to apply MS_rps1_RGB.avi and MS_rps1_THERMAL.avi, we need to create folder  "scripts/video/MS_rps1/" and store the two video in the folder.
+    '''
+    NT = NoseTracking(file_title='MS_test1', main_dir='scripts/', coor_dict_path='scripts/video/')
+    pixel_df = NT.main(video_form='{}_RGB.avi')
