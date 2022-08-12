@@ -1,6 +1,12 @@
-'''
+"""
 Apply the location information got from rgb image on thermal image
-'''
+
+Please see scripts/video/README.md
+Please see scripts/protoring/models/pose_model/pose_model/ReadMe.md
+In this demo, we apply on MS_test1_RGB.avi and MS_test1_THERMAL.avi. So we have to store these two video in folder "scripts/video/MS_test1/".
+Similarly, if we want to apply MS_rps1_RGB.avi and MS_rps1_THERMAL.avi, we need to create folder  "scripts/video/MS_rps1/" and store the two video in the folder.
+"""
+
 import os
 import cv2
 import numpy as np
@@ -161,10 +167,7 @@ class NoseTracking():
 #########################################################
 if __name__ == '__main__':
     '''
-    Please see scripts/video/README.md
-    Please see scripts/protoring/models/pose_model/pose_model/ReadMe.md
-    In this demo, we apply on MS_test1_RGB.avi and MS_test1_THERMAL.avi. So we have to store these two video in folder "scripts/video/MS_test1/".
-    Similarly, if we want to apply MS_rps1_RGB.avi and MS_rps1_THERMAL.avi, we need to create folder  "scripts/video/MS_rps1/" and store the two video in the folder.
+    If we apply on videos 'XXX_RGB.avi' and 'XXX_THERMAL.avi', then file_title is 'XXX'
     '''
     NT = NoseTracking(file_title='MS_test1', main_dir='scripts/', coor_dict_path='scripts/video/')
     pixel_df = NT.main(video_form='{}_RGB.avi')
