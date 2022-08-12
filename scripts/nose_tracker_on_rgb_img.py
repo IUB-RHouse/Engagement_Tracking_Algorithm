@@ -10,7 +10,7 @@ import os
 import cv2
 import numpy as np
 from scripts.protoring.face_detector import get_face_detector, find_faces
-from scripts.protoring.face_landmarks import get_landmark_model, detect_marks
+from scripts.protoring.face_landmark import get_landmark_model, detect_marks
 
 
 
@@ -76,7 +76,7 @@ def ensure_edge_line_in_picture(rect_, img_):
     return rect_
 
 
-def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
+def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model, nose_point, save=True, save_dir='scripts/pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
     '''
     Get cropped image whish is slightly larget than thermal camera view.
     This step is to get rid of the researcher's face so the algorithm would not get confused.
@@ -171,7 +171,6 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
 
 #################################################
 if __name__ == '__main__':
-    os.chdir('RHouse/Proctoring')
     face_model = get_face_detector()
     landmark_model = get_landmark_model()
     # left = [36, 37, 38, 39, 40, 41]
@@ -180,13 +179,14 @@ if __name__ == '__main__':
     nose_label = [30]  #nosetip
 
     # test img
-    pic_dir = 'pic_test/'
-    coor_dict = np.load('video/' + 'thermal_cam_coordinate.npy', allow_pickle=True).item()
+    pic_dir = 'scripts/pic_test/'
+    coor_dict = np.load('scripts/video/thermal_cam_coordinate.npy', allow_pickle=True).item()
     for file in os.listdir(pic_dir):
         if file.endswith('.jpg') or file.endswith('.png') or file.endswith('.jpeg'):
             img_name = file
             img = cv2.imread('{}{}'.format(pic_dir, img_name))
             img_type = img_name.split('.')[-1]
-            img_nose_label_cropped(coor_dict, img, img_name, face_model, nose_point=nose_label, save=True, img_type=img_type, save_frame='test_nosetip_{}')
+            img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model, nose_point=nose_label, save=True, img_type=img_type, save_frame='test_nosetip_{}')
+    print('The demo images are stored in {}/test/'.format(pic_dir))
 
 
