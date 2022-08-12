@@ -4,6 +4,9 @@ import numpy as np
 
 
 def grid_video(f, video_route, img_max=-1, grid_interval=15):
+    if not os.path.isfile(video_route + f):
+        print('Cannot find {}'.format(video_route + f))
+        return
     vc = cv2.VideoCapture(video_route + f)
     fps = vc.get(cv2.CAP_PROP_FPS)
     frame_count = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
