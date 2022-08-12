@@ -17,6 +17,8 @@ def get_face_detector(modelFile=None, configFile=None, quantized=False, model_di
             modelFile = "{}res10_300x300_ssd_iter_140000.caffemodel".format(model_dir)
         if configFile == None:
             configFile = "{}deploy.prototxt".format(model_dir)
+        if not os.path.isfile(configFile):
+            print('Cannot find {}; May need to change \'model_dir\' in \'face_detector.py > get_face_detector()\''.format("{}deploy.prototxt".format(model_dir)))
         model = cv2.dnn.readNetFromCaffe(configFile, modelFile)
     return model
 
