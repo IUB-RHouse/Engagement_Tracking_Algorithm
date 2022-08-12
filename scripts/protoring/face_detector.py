@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 ##########################################################################
-def get_face_detector(modelFile=None, configFile=None, quantized=False, model_dir='models/'):
+def get_face_detector(modelFile=None, configFile=None, quantized=False, model_dir='scripts/protoring/models/'):
     if quantized:
         if modelFile == None:
             modelFile = "{}opencv_face_detector_uint8.pb".format(model_dir)
