@@ -38,7 +38,7 @@ Due to the limit of file size, some necessary documents cannot be uploaded to gi
     1. Check if there are two files in folder variables: *variable.index* and *variables.data-00000-of-00001*
     2. If lack of *variables.data-00000-of-00001*, use the following link to download the file and store in folder *scripts/protoring/models/variables*: https://drive.google.com/file/d/18o0tIqrLWnoI0e-GxiC4xPlK4zfXLM7O/view?usp=sharing
 
-##### Operate
+#### Operate
 1. find *scripts/synchronize_rgb_thermal.py*
 2. `python synchronize_rgb_thermal.py`
 3. Enter video file title (for example: MS_test1), this is which video set you want to test
