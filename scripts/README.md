@@ -2,7 +2,7 @@
 
 ### Approach
 1. Grid Video (*grid_video.py*)
-  1. Extract frame images from visual video
+    1. Extract frame images from visual video
   2. Extract frame images from thermal video
 3. Find Nose Tip location on image (*nose_tracker_on_rgb+img.py*)
   1. load dlib trained models(*face_landmark.py*, *face_detector.py*)
