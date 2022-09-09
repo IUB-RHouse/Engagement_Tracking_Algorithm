@@ -9,10 +9,8 @@ The program will do the following steps:
 import os
 import cv2
 import numpy as np
-from scripts.protoring.face_detector import get_face_detector, find_faces
-from scripts.protoring.face_landmark import get_landmark_model, detect_marks
-
-
+from protoring.face_detector import get_face_detector, find_faces
+from protoring.face_landmark import get_landmark_model, detect_marks
 
 
 def try_make_dir(dir1):
@@ -41,7 +39,7 @@ def feature_on_mask(mask, side, shape):
     mask : np.uint8
         Mask with region of interest drawn
     [l, t, r, b] : list
-        left, top, right, and bottom most points of ROI
+        left, top, right, and bottommost points of ROI
 
     """
     points = [shape[i] for i in side]
@@ -127,7 +125,7 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
     else:
         return img, nose_find
 
-#
+
 # def img_nose_label(img, img_name, face_model, landmark_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
 #     rects = find_faces(img, face_model)
 #     if not rects:
@@ -135,10 +133,9 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
 #             return
 #         else:
 #             return None, None
-#     if len(rects) > 1:
-#         rects.sort()
 #     rect = rects[0]
-#     rect = ensure_edge_line_in_picture(rect_=rect, img_=img)
+#     for edg in range(4):
+#         rect[edg] = max(0, rect[edg])
 #     img = draw_rectangle(img2=img, rect=rect)
 #
 #     shape = detect_marks(img, landmark_model, rect)
@@ -188,5 +185,4 @@ if __name__ == '__main__':
             img_type = img_name.split('.')[-1]
             img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model, nose_point=nose_label, save=True, img_type=img_type, save_frame='test_nosetip_{}')
     print('The demo images are stored in {}/test/'.format(pic_dir))
-
 

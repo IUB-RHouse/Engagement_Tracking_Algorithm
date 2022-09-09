@@ -1,19 +1,14 @@
-"""
+'''
 Apply the location information got from rgb image on thermal image
-
-Please see scripts/video/README.md
-Please see scripts/protoring/models/pose_model/pose_model/ReadMe.md
-In this demo, we apply on MS_test1_RGB.avi and MS_test1_THERMAL.avi. So we have to store these two video in folder "scripts/video/MS_test1/".
-Similarly, if we want to apply MS_rps1_RGB.avi and MS_rps1_THERMAL.avi, we need to create folder  "scripts/video/MS_rps1/" and store the two video in the folder.
-"""
-
+'''
 import os
 import cv2
 import numpy as np
 import pandas as pd
-import time
-from scripts.nose_tracker_on_rgb_img import *
-from scripts.grid_video_to_img import grid_video
+import time as time
+
+from nose_tracker_on_rgb_img import *
+from grid_video_to_img import grid_video
 
 
 class NoseTracking():
@@ -36,7 +31,8 @@ class NoseTracking():
         rgb_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
         # Thermal Video
         f = video_form.format(self.file_title).replace('RGB', 'THERMAL')
-        thermal_frame_count = grid_video(f,self.video_img_dir , max_pic_n, visual_interval * 2)
+        thermal_frame_count = grid_video(f, self.video_img_dir , max_pic_n, visual_interval * 2, rgb_frame_count)
+        # thermal_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval * 4)  # not sure why it is 4...I though it should be 2
 
     def nose_detect_on_rgb_img(self):
         for file in os.listdir(self.pic_dir):
@@ -46,42 +42,42 @@ class NoseTracking():
                 # img_nose_label(img, img_name, self.face_model, self.landmark_model, nose_point=self.nose_label, save=True, save_dir=self.pic_dir + 'test/', save_frame='test_nosetip_{}')
                 img_nose_label_cropped(self.coor_dict, img, img_name, self.face_model, self.landmark_model, nose_point=self.nose_label, save=True, save_dir=self.pic_dir + 'test/', save_frame='test_nosetip_{}')
 
-    # def find_response_area_on_thermal(self, rect_info_dir, file, thermal_img_name, height_adj_para=None):
-    #     """
-    #     We can abandon this function....
-    #     """
-    #     rect_info = np.load(rect_info_dir + file, allow_pickle=True).item()
-    #     thermal_img = cv2.imread(self.video_img_dir + self.thermal_file_name + thermal_img_name)
-    #     x1, x2 = rect_info['rect'][0], rect_info['rect'][2]
-    #     y1, y2 = rect_info['rect'][1], rect_info['rect'][3]
-    #     w1, w2 = 0, len(thermal_img[0])
-    #     h1, h2 = 0, len(thermal_img)
-    #     # ki, kj = 0, 0
-    #     k_left = (min(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
-    #     k_right = (max(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
-    #     # thermal_img[:, round(k_left)] = [0, 0, 0]
-    #     # thermal_img[:, round(k_right)] = [0, 0, 0]
-    #     scale_para = (w2 - w1) / (x2 - x1)
-    #     visual_nose_length = max(rect_info['nose_area'][0]) - min(rect_info['nose_area'][0])
-    #     nose_length_after_scale = round(visual_nose_length * scale_para)
-    #     if height_adj_para is None:
-    #         try_make_dir(self.video_img_dir + self.thermal_file_name + 'test1/')
-    #         m = round(h2 // 3)
-    #         goal_m = m
-    #         min_color = 255
-    #         while m < h2 - nose_length_after_scale:
-    #             mean_color = np.mean(thermal_img[m:m + nose_length_after_scale, round(k_left): round(k_right)])
-    #             # print(m, mean_color)
-    #             if mean_color < min_color:
-    #                 min_color = mean_color
-    #                 goal_m = m
-    #             m += 10
-    #         thermal_img_tmp = thermal_img.copy()
-    #         thermal_img_tmp[goal_m, round(k_left): round(k_right)] = [0, 0, 0]
-    #         thermal_img_tmp[goal_m + nose_length_after_scale, round(k_left): round(k_right)] = [0, 0, 0]
-    #         thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_left)] = [0, 0, 0]
-    #         thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_right)] = [0, 0, 0]
-    #         cv2.imwrite(self.video_img_dir + self.thermal_file_name + 'test1/m{}_'.format(m) + thermal_img_name, thermal_img_tmp)
+#     def find_response_area_on_thermal(self, rect_info_dir, file, thermal_img_name, height_adj_para=None):
+#         """
+#         We can abandon this function....
+#         """
+#         rect_info = np.load(rect_info_dir + file, allow_pickle=True).item()
+#         thermal_img = cv2.imread(self.video_img_dir + self.thermal_file_name + thermal_img_name)
+#         x1, x2 = rect_info['rect'][0], rect_info['rect'][2]
+#         y1, y2 = rect_info['rect'][1], rect_info['rect'][3]
+#         w1, w2 = 0, len(thermal_img[0])
+#         h1, h2 = 0, len(thermal_img)
+#         # ki, kj = 0, 0
+#         k_left = (min(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
+#         k_right = (max(rect_info['nose_area'][1]) - x1) * w2 / (x2 - x1)
+#         # thermal_img[:, round(k_left)] = [0, 0, 0]
+#         # thermal_img[:, round(k_right)] = [0, 0, 0]
+#         scale_para = (w2 - w1) / (x2 - x1)
+#         visual_nose_length = max(rect_info['nose_area'][0]) - min(rect_info['nose_area'][0])
+#         nose_length_after_scale = round(visual_nose_length * scale_para)
+#         if height_adj_para is None:
+#             try_make_dir(self.video_img_dir + self.thermal_file_name + 'test1/')
+#             m = round(h2 // 3)
+#             goal_m = m
+#             min_color = 255
+#             while m < h2 - nose_length_after_scale:
+#                 mean_color = np.mean(thermal_img[m:m + nose_length_after_scale, round(k_left): round(k_right)])
+#                 # print(m, mean_color)
+#                 if mean_color < min_color:
+#                     min_color = mean_color
+#                     goal_m = m
+#                 m += 10
+#             thermal_img_tmp = thermal_img.copy()
+#             thermal_img_tmp[goal_m, round(k_left): round(k_right)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m + nose_length_after_scale, round(k_left): round(k_right)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_left)] = [0, 0, 0]
+#             thermal_img_tmp[goal_m:goal_m + nose_length_after_scale, round(k_right)] = [0, 0, 0]
+#             cv2.imwrite(self.video_img_dir + self.thermal_file_name + 'test1/m{}_'.format(m) + thermal_img_name, thermal_img_tmp)
 
     def find_response_area_on_thermal_v2(self, rect_info_dir, file, thermal_img_name, label_nosetip=True):
         """
@@ -138,8 +134,11 @@ class NoseTracking():
         for file in os.listdir(self.video_img_dir + self.thermal_file_name + 'test/'):
             if file.endswith('.npy'):
                 record_i = np.load(self.video_img_dir + self.thermal_file_name + 'test/' + file, allow_pickle=True).item()
+                record_i['thermal_frame_index'] = int(file.split('-')[-1].split('.')[0])
                 ts_record[int(file.split('-')[1][:-4])] = record_i
         ts_df = pd.DataFrame.from_dict(ts_record).transpose()
+        ts_df = ts_df.sort_values(by=['thermal_frame_index'])
+        ts_df = ts_df.reset_index(drop=True)
         return ts_df
         # df = pd.DataFrame.from_dict(my_dict)
 
@@ -152,10 +151,12 @@ class NoseTracking():
     def main(self,  video_form='MS_test2_RGB.avi'):
         tstart = time.time()
         self.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form=video_form)
+        print('====== Done Video Grid =======')
         self.nose_detect_on_rgb_img()
+        print('====== Done RGB Nose Detection =======')
         self.apply_on_thermal_img()
+        print('====== Done Thermal Image Nose Tip Pixel =======')
         pixel_data = self.time_series_nosetip_pixel()
-        pixel_data['thermal_frame_index'] = pixel_data.index
         print('usage time=', time.time() - tstart)
         print(pixel_data.head())
         pixel_data.to_csv(self.video_img_dir + 'pixel_df.csv', line_terminator='\n')
@@ -166,8 +167,12 @@ class NoseTracking():
 #########################################################
 #########################################################
 if __name__ == '__main__':
-    '''
-    If we apply on videos 'XXX_RGB.avi' and 'XXX_THERMAL.avi', then file_title is 'XXX'
-    '''
-    NT = NoseTracking(file_title='MS_test1', main_dir='scripts/', coor_dict_path='scripts/video/')
-    pixel_df = NT.main(video_form='{}_RGB.avi')
+    # Demo for MS_test2_RGB.avi
+    entry_dir = 'scripts/'
+    if not os.path.isdir(entry_dir):
+        if os.getcwd().endswith('scripts'):
+            entry_dir = ''
+        else:
+            print('Need to rename \'entry_dir\'')
+    NT = NoseTracking(file_title='MS_test2', main_dir=entry_dir, coor_dict_path=entry_dir + 'video/')
+    pixel_df = NT.main()
