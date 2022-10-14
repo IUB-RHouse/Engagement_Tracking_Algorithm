@@ -31,7 +31,7 @@ class NoseTracking():
         rgb_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
         # Thermal Video
         f = video_form.format(self.file_title).replace('RGB', 'THERMAL')
-        thermal_frame_count = grid_video(f, self.video_img_dir , max_pic_n, visual_interval * 2, rgb_frame_count)
+        thermal_frame_count = grid_video(f=f, video_route=self.video_img_dir , img_max=max_pic_n, grid_interval=visual_interval * 2)
         # thermal_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval * 4)  # not sure why it is 4...I though it should be 2
 
     def nose_detect_on_rgb_img(self):
