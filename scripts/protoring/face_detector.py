@@ -3,6 +3,7 @@ Original Reference Source: https://towardsdatascience.com/automating-online-proc
 '''
 import cv2
 import numpy as np
+import os
 
 ##########################################################################
 def get_face_detector(modelFile=None, configFile=None, quantized=False, model_dir='scripts/protoring/models/'):
