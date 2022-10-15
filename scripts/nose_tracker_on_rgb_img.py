@@ -79,7 +79,7 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
     Get cropped image whish is slightly larget than thermal camera view.
     This step is to get rid of the researcher's face so the algorithm would not get confused.
     '''
-    buff = [-100, -120, 300, 150]  # upper, left, bottom, right
+    buff = [-100, -110, 300, 150]  # upper, left, bottom, right
     y1, x1, y2, x2 = coor_dict['upper'], coor_dict['left'], coor_dict['lower'], coor_dict['right']
     cropped_img = img[y1 + buff[0]: y2 + buff[2], x1 + buff[1]: x2 + buff[3]]
     # cropped_img = img[y1 - 200: y2 + 400, x1 - 50: x2 + 50]
@@ -90,7 +90,12 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
         else:
             return None, None
     if len(rects) > 1:
-        rects.sort()
+        c = None
+        for i in range(len(rects)):
+            if 0 in rects[i]:
+                c = i
+        if c is not None:
+            rects.pop(c)
     rect = rects[0]
     rect = ensure_edge_line_in_picture(rect_=rect, img_=cropped_img)
 
