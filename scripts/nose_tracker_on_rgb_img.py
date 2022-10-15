@@ -96,6 +96,9 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
                 c = i
         if c is not None:
             rects.pop(c)
+    if len(rects) > 1:
+        righter = max([r[0] for r in rects])
+        rects = [r for r in rects if r[0] == righter]
     rect = rects[0]
     rect = ensure_edge_line_in_picture(rect_=rect, img_=cropped_img)
 
@@ -129,6 +132,7 @@ def img_nose_label_cropped(coor_dict, img, img_name, face_model, landmark_model,
         np.save(save_dir + 'rectangle_info/' + save_frame.format(img_name).replace('.{}'.format(img_type), '.npy'), rect_info, allow_pickle=True)
     else:
         return img, nose_find
+
 
 
 # def img_nose_label(img, img_name, face_model, landmark_model, nose_point, save=True, save_dir='pic_test/test/', save_frame='test_nose_{}', img_type='jpg'):
