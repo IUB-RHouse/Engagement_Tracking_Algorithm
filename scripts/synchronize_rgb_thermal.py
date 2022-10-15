@@ -5,8 +5,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
-import time as time
-
+import time
 from nose_tracker_on_rgb_img import *
 from grid_video_to_img import grid_video
 
@@ -26,12 +25,16 @@ class NoseTracking():
         self.coor_dict = np.load(coor_dict_path + 'thermal_cam_coordinate.npy', allow_pickle=True).item()
 
     def grid_video_to_img(self, max_pic_n=-1, visual_interval=1, video_form='{}_RGB.avi'):
+        self.visual_interval = visual_interval
         # Visual Video
         f = video_form.format(self.file_title)
-        rgb_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
+        rgb_fps = grid_video(f, self.video_img_dir, max_pic_n, visual_interval)
+        self.rgb_fps = rgb_fps
         # Thermal Video
         f = video_form.format(self.file_title).replace('RGB', 'THERMAL')
-        thermal_frame_count = grid_video(f=f, video_route=self.video_img_dir , img_max=max_pic_n, grid_interval=visual_interval * 2)
+        thermal_fps = grid_video(f=f, video_route=self.video_img_dir , img_max=max_pic_n, grid_interval=visual_interval * 2)
+        self.thermal_fps = thermal_fps
+        print('Frames per second: RGB={}; THERMAL={}'.format(self.rgb_fps, self.thermal_fps))
         # thermal_frame_count = grid_video(f, self.video_img_dir, max_pic_n, visual_interval * 4)  # not sure why it is 4...I though it should be 2
 
     def nose_detect_on_rgb_img(self):
@@ -138,19 +141,14 @@ class NoseTracking():
                 ts_record[int(file.split('-')[1][:-4])] = record_i
         ts_df = pd.DataFrame.from_dict(ts_record).transpose()
         ts_df = ts_df.sort_values(by=['thermal_frame_index'])
+        ts_df['second'] = ts_df['thermal_frame_index'].apply(lambda x: round(x / self.thermal_fps, 2))
         ts_df = ts_df.reset_index(drop=True)
         return ts_df
         # df = pd.DataFrame.from_dict(my_dict)
 
-        # save as json file
-
-        # dict --> json
-        # transform data when using
-        # pd.read_json(j0, orient='index')
-
     def main(self,  video_form='MS_test2_RGB.avi'):
         tstart = time.time()
-        self.grid_video_to_img(max_pic_n=-1, visual_interval=1, video_form=video_form)
+        self.grid_video_to_img(max_pic_n=-1, visual_interval=15, video_form=video_form)
         print('====== Done Video Grid =======')
         self.nose_detect_on_rgb_img()
         print('====== Done RGB Nose Detection =======')
@@ -167,12 +165,13 @@ class NoseTracking():
 #########################################################
 #########################################################
 if __name__ == '__main__':
-    # Demo for MS_test2_RGB.avi
     entry_dir = 'scripts/'
     if not os.path.isdir(entry_dir):
         if os.getcwd().endswith('scripts'):
             entry_dir = ''
         else:
             print('Need to rename \'entry_dir\'')
-    NT = NoseTracking(file_title='MS_test2', main_dir=entry_dir, coor_dict_path=entry_dir + 'video/')
-    pixel_df = NT.main()
+    file_title = input('Enter File Title (ex: \'MS_test1\'):')
+    NT = NoseTracking(file_title=file_title, main_dir=entry_dir, coor_dict_path=entry_dir + 'video/')
+    pixel_df = NT.main(video_form='{}_RGB.avi'.format(file_title))
+
