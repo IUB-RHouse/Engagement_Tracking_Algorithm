@@ -10,7 +10,9 @@ def grid_video(f, video_route, img_max=-1, grid_interval=15):
     vc = cv2.VideoCapture(video_route + f)
     fps = vc.get(cv2.CAP_PROP_FPS)
     frame_count = int(vc.get(cv2.CAP_PROP_FRAME_COUNT))
-    print(frame_count)
+    if frame_count == 0:
+        frame_count = np.Inf
+    # print(frame_count)
     video = []
     grid_file = video_route + '{}_grid/'.format(f[:-4])
     try:
@@ -20,23 +22,27 @@ def grid_video(f, video_route, img_max=-1, grid_interval=15):
     if img_max < 0:
         img_max = np.Inf
     n = 0
-    for idx in range(frame_count):
-        if idx % grid_interval != 0:
+    while True:
+        if n % grid_interval != 0:
+            n += 1
             continue
-        vc.set(1, idx)
+        vc.set(1, n)
         ret, frame = vc.read()
-        height, width, layers = frame.shape
-        size = (width, height)
+        # height, width, layers = frame.shape
+        # size = (width, height)
 
         if frame is not None:
-            file_name = '{}{}-{:08d}.jpg'.format(grid_file, f[:-4], idx)
+            file_name = '{}{}-{:08d}.jpg'.format(grid_file, f[:-4], n)
             cv2.imwrite(file_name, frame)
             n += 1
+        else:
+            break
         # print("\rprocess: {}/{}".format(idx + 1, frame_count), end='')
-        if n >= img_max:
+        if (n >= img_max) or (n > frame_count):
             break
     vc.release()
     print('total img: {}'.format(n))
+    return fps
     
 
 ########################################
