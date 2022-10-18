@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import config as cfg
 from std_msgs.msg import String
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image as Img
@@ -18,7 +19,7 @@ recTherm = False
 analyze = False
 
 ### Azure Global Variables
-vSize = (2048, 1536) # This is from the Azure Kinect /rgb/image_raw topic
+vSize = cfg.k4aRes["3072P"]
 vFrameRate = 15.0 # This is NOT the default FPS for the Azure Kinect. Azure Kinect defaults on 5, change this in driver.launch in the drivers folder of the Azure Kinect ROS Driver
 vFilename = "output/" + now.strftime("%d_%m_%Y-%H_%M_%S") + "_RGB"
 vVid = cv.VideoWriter(vFilename + ".avi", fourCC, vFrameRate, vSize, True)
