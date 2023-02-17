@@ -1,0 +1,6 @@
+pyyaml
+matplotlib
+opencv-python
+
+### Unofficial and experimental ROS Python Package that can run without ROS ###
+--extra-index-url https://otamachan.github.io/rospy-index rospy-all
